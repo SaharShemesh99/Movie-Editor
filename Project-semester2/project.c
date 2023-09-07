@@ -2,18 +2,18 @@
 * It is an editing Project!											 *
 * Our program shows to the user the following menu:					 *
 * [0] Exit														 	 *
-* [1] Add new Frame													 *
-* [2] Remove a Frame												 *
-* [3] change frame index											 *
-* [4] Change frame duration											 *
-* [5] Change duration of all frames									 *
-* [6] List frames													 *
+* [1] Add new item													 *
+* [2] Remove a item												 *
+* [3] change item index											 *
+* [4] Change item duration											 *
+* [5] Change duration of all items									 *
+* [6] List items													 *
 * [7] Play movie													 *
 * [8] Save my movie												   	 *
 * [9] Open saved movie												 *
 * [10] Print the names of all my movies								 *
 * [11] Show all the saved movies									 *
-* [12] Delete all the frames										 *
+* [12] Delete all the items										 *
 * [13] Change the color of the background and the foreground		 *
 * The user decides and the program operates according to his choice. *
 \********************************************************************/
@@ -24,16 +24,16 @@
 #include <Windows.h>
 #include <opencv2\highgui\highgui_c.h>
 
-struct Frame
+struct item
 {
 	char *name;
 	unsigned int duration;
 	char *path;
-}typedef frame_t;
+}typedef item_t;
 
 struct Link
 {
-	frame_t	*frame;
+	item_t	*item;
 	struct Link	*next;
 }typedef link_t;
 
@@ -47,17 +47,17 @@ void menu(void); //Definition of functions
 void startFun(void); //Definition of functions
 void endFun(void); //Definition of functions
 link_t* inputForLink(link_t* first); //Definition of functions
-int checkOfName(link_t* first, char nameForFrame[]); //Definition of functions
+int checkOfName(link_t* first, char nameForitem[]); //Definition of functions
 link_t* deleteSquad(link_t* curr, char name[]); //Definition of functions
 link_t* changePosition(link_t* first, char name[], int position);
-void changeFrameDuration(link_t* link); //Definition of functions
+void changeitemDuration(link_t* link); //Definition of functions
 void changeAllTheDurations(link_t* first); //Definition of functions
-void printFrames(link_t* link); //Definition of functions
+void printitems(link_t* link); //Definition of functions
 void freeFun(link_t* link); //Definition of functions
 void play(link_t *list); //Definition of functions
 int saveFun(link_t* first); //Definition of functions
 link_t* OpenSavedMovie(void); //Definition of functions
-link_t* addToEnd(link_t* first, link_t* lastOrgan); //Definition of functions
+link_t* addToEnd(link_t* first, link_t* lastitem); //Definition of functions
 void namesOfTheMovies(void); //Definition of functions
 int showAllTheSavedMovies(void); //Definition of functions
 void colorFun(void); //Definition of functions
@@ -79,7 +79,7 @@ void menu(void)
 	int ans = 1, saveOrNot = 0, position = 0, wholeOrNot = 0, count = 0, whereToStart = 0, flag = 0, answer = 0; //Setting variables
 	link_t* first = NULL; //Setting variables
 	link_t* temp = NULL; //Setting variables
-	char nameForFrame[MAX_NAME_SIZE] = { 0 }; //Setting variables
+	char nameForitem[MAX_NAME_SIZE] = { 0 }; //Setting variables
 
 	startFun();
 	system("start /MIN options.m4a"); //This command causes for playing music file
@@ -88,18 +88,18 @@ void menu(void)
 	{	
 		printf("Editing Project! what would you like to do?\n"); //Output
 		printf("[0] Exit\n"); //Output
-		printf("[1] Add new Frame\n"); //Output
-		printf("[2] Remove a Frame\n"); //Output
-		printf("[3] change frame index\n"); //Output
-		printf("[4] Change frame duration\n"); //Output
-		printf("[5] Change duration of all frames\n"); //Output
-		printf("[6] List frames\n"); //Output
+		printf("[1] Add new item\n"); //Output
+		printf("[2] Remove a item\n"); //Output
+		printf("[3] change item index\n"); //Output
+		printf("[4] Change item duration\n"); //Output
+		printf("[5] Change duration of all items\n"); //Output
+		printf("[6] List items\n"); //Output
 		printf("[7] Play movie\n"); //Output
 		printf("[8] Save my movie\n"); //Output
 		printf("[9] Open saved movie\n"); //Output
 		printf("[10] Print the names of all my movies\n"); //Output
 		printf("[11] Show all the saved movies\n"); //Output
-		printf("[12] Delete all the frames\n"); //Output
+		printf("[12] Delete all the items\n"); //Output
 		printf("[13] Change the color of the background and the foreground\n"); //Output
 		scanf("%d", &ans); //Input
 		getchar(); //Remove '\n'
@@ -127,61 +127,61 @@ void menu(void)
 			freeFun(first); //Function call
 			break;
 		case 1:
-			//Add new Frame
+			//Add new item
 			first = addToEnd(first, inputForLink(first)); //Function call
 			break;
 		case 2:
-			//Remove a Frame
+			//Remove a item
 			if (first) //Checking if the list isn't empty
 			{
-				printf("Enter the name of the frame:"); //Output
-				fgets(nameForFrame, MAX_NAME_SIZE, stdin); //Input
-				nameForFrame[strcspn(nameForFrame, "\n")] = ZERO; //Remove '\n'
-				answer = checkOfName(first, nameForFrame);
+				printf("Enter the name of the item:"); //Output
+				fgets(nameForitem, MAX_NAME_SIZE, stdin); //Input
+				nameForitem[strcspn(nameForitem, "\n")] = ZERO; //Remove '\n'
+				answer = checkOfName(first, nameForitem);
 				if (answer == 1)
 				{
-					first = deleteSquad(first, nameForFrame); //Function call
+					first = deleteSquad(first, nameForitem); //Function call
 				}
 				else
 				{
-					printf("The frame was not found\n");
+					printf("The item was not found\n");
 				}
 			}
 			else
 			{
-				printf("The list is empty, there is no point in removing a frame.\n"); //Output
+				printf("The list is empty, there is no point in removing a item.\n"); //Output
 			}
 			break;
 		case 3:
-			//change frames index
+			//change items index
 			if (first) //Checking if the list isn't empty
 			{
-				printf("Enter the name of the frame: "); //Output
-				fgets(nameForFrame, MAX_NAME_SIZE, stdin); //Input
-				nameForFrame[strcspn(nameForFrame, "\n")] = ZERO; //Remove '\n'
-				answer = checkOfName(first, nameForFrame);
+				printf("Enter the name of the item: "); //Output
+				fgets(nameForitem, MAX_NAME_SIZE, stdin); //Input
+				nameForitem[strcspn(nameForitem, "\n")] = ZERO; //Remove '\n'
+				answer = checkOfName(first, nameForitem);
 				if (answer == 1)
 				{
-					printf("Enter the new index in the movie you wish to place the frame: "); //Output
+					printf("Enter the new index in the movie you wish to place the item: "); //Output
 					scanf("%d", &position); //Input
 					getchar(); //Remove '\n'
-					first = changePosition(first, nameForFrame, position); //Function call
+					first = changePosition(first, nameForitem, position); //Function call
 				}
 				else
 				{
-					printf("This frame does not exist\n");
+					printf("This item does not exist\n");
 				}
 			}
 			else
 			{
-				printf("The list is empty, you can't change frames index.\n"); //Output
+				printf("The list is empty, you can't change items index.\n"); //Output
 			}
 			break;
 		case 4:
-			//Change frame duration
+			//Change item duration
 			if (first) //Checking if the list isn't empty
 			{
-				changeFrameDuration(first); //Function call
+				changeitemDuration(first); //Function call
 			}
 			else
 			{
@@ -189,7 +189,7 @@ void menu(void)
 			}
 			break;
 		case 5:
-			//Change duration of all frames
+			//Change duration of all items
 			if (first) //Checking if the list isn't empty
 			{
 				changeAllTheDurations(first); //Function call
@@ -200,10 +200,10 @@ void menu(void)
 			}
 			break;
 		case 6:
-			//List frames
+			//List items
 			if (first) //Checking if the list isn't empty
 			{
-				printFrames(first); //Function call
+				printitems(first); //Function call
 			}
 			else
 			{
@@ -228,7 +228,7 @@ void menu(void)
 				}
 				else
 				{
-					printf("Where do you wish to start playing the movie from? (number of frame)\n"); //Output
+					printf("Where do you wish to start playing the movie from? (number of item)\n"); //Output
 					scanf("%d", &whereToStart); //Input
 					getchar(); //Remove '\n'
 					temp = first;
@@ -248,7 +248,7 @@ void menu(void)
 					}
 					if (!flag) //Checking if the video was played
 					{
-						printf("The movie has only %d frames!\n", count); //Output
+						printf("The movie has only %d items!\n", count); //Output
 					}
 				}
 			}
@@ -287,7 +287,7 @@ void menu(void)
 				else
 				{
 					freeFun(first); //Function call
-					first = NULL; //Reset the pointer to the first organ
+					first = NULL; //Reset the pointer to the first item
 				}
 			}
 			first = OpenSavedMovie(); //Function call
@@ -304,7 +304,7 @@ void menu(void)
 			}
 			break;
 		case 12:
-			//Delete all the frames
+			//Delete all the items
 			if (first) //Checking if the list isn't empty
 			{
 				freeFun(first); //Function call
@@ -335,12 +335,12 @@ The purpose of the function is to play the words of the beginning of the program
 void startFun(void)
 {
 	link_t* startLink = NULL; //Setting variables
-	frame_t* startFrame = NULL; //Setting variables
+	item_t* startitem = NULL; //Setting variables
 
 	system("start /MIN For_the_beginning.m4a"); //This command causes for playing music file
 
-	startFrame = (frame_t*)malloc(sizeof(frame_t)); //Dynamic memory allocation
-	if (!startFrame) //Checking if the dynamic memory allocation succeeded
+	startitem = (item_t*)malloc(sizeof(item_t)); //Dynamic memory allocation
+	if (!startitem) //Checking if the dynamic memory allocation succeeded
 	{
 		printf("Dynamic memory allocation failed\n"); //Output
 	}
@@ -350,13 +350,13 @@ void startFun(void)
 		printf("Dynamic memory allocation failed\n"); //Output
 	}
 
-	startLink->frame = startFrame;
-	startLink->frame->duration = 2000;
-	startLink->frame->name = "start";
-	startLink->frame->path = "Welcome.jpg";
+	startLink->item = startitem;
+	startLink->item->duration = 2000;
+	startLink->item->name = "start";
+	startLink->item->path = "Welcome.jpg";
 	startLink->next = NULL;
 	play(startLink); //Function call
-	free(startFrame);
+	free(startitem);
 	free(startLink);
 }
 
@@ -367,12 +367,12 @@ The purpose of the function is to play the words of the ending of the program an
 void endFun(void)
 {
 	link_t* startLink = NULL; //Setting variables
-	frame_t* startFrame = NULL; //Setting variables
+	item_t* startitem = NULL; //Setting variables
 
 	system("start /MIN For_the_end.m4a"); //This command causes for playing music file
 
-	startFrame = (frame_t*)malloc(sizeof(frame_t)); //Dynamic memory allocation
-	if (!startFrame) //Checking if the dynamic memory allocation succeeded
+	startitem = (item_t*)malloc(sizeof(item_t)); //Dynamic memory allocation
+	if (!startitem) //Checking if the dynamic memory allocation succeeded
 	{
 		printf("Dynamic memory allocation failed\n"); //Output
 	}
@@ -382,47 +382,47 @@ void endFun(void)
 		printf("Dynamic memory allocation failed\n"); //Output
 	}
 
-	startLink->frame = startFrame;
-	startLink->frame->duration = 6000;
-	startLink->frame->name = "end";
-	startLink->frame->path = "Goodbye.jpg";
+	startLink->item = startitem;
+	startLink->item->duration = 6000;
+	startLink->item->name = "end";
+	startLink->item->path = "Goodbye.jpg";
 	startLink->next = NULL;
 	play(startLink); //Function call
-	free(startFrame);
+	free(startitem);
 	free(startLink);
 }
 
 /*
-The purpose of the function is to get an organ from the user.
-The function gets pointer to the first organ.
-The function returns pointer to the first organ because the pointer to the first organ might be changed.
+The purpose of the function is to get an item from the user.
+The function gets pointer to the first item.
+The function returns pointer to the first item because the pointer to the first item might be changed.
 */
 link_t* inputForLink(link_t* first)
 {
 	link_t* tempForLink = NULL; //Setting variables
-	frame_t* tempForFrame = NULL; //Setting variables
-	char* nameForFrame = NULL; //Setting variables
-	char* pathForFrame = NULL; //Setting variables
+	item_t* tempForitem = NULL; //Setting variables
+	char* nameForitem = NULL; //Setting variables
+	char* pathForitem = NULL; //Setting variables
 	int i = 0; //Setting variables
 
-	printf("			*** Creating new frame ***			\n"); //Output
+	printf("			*** Creating new item ***			\n"); //Output
 
-	nameForFrame = (char*)calloc(MAX_NAME_SIZE, sizeof(char)); //Dynamic memory allocation
-	if (!nameForFrame) //Checking if the dynamic memory allocation succeeded
+	nameForitem = (char*)calloc(MAX_NAME_SIZE, sizeof(char)); //Dynamic memory allocation
+	if (!nameForitem) //Checking if the dynamic memory allocation succeeded
 	{
 		printf("Dynamic memory allocation failed\n"); //Output
 		return NULL;
 	}
 
-	pathForFrame = (char*)calloc(MAX_PATH_SIZE, sizeof(char)); //Dynamic memory allocation
-	if (!pathForFrame) //Checking if the dynamic memory allocation succeeded
+	pathForitem = (char*)calloc(MAX_PATH_SIZE, sizeof(char)); //Dynamic memory allocation
+	if (!pathForitem) //Checking if the dynamic memory allocation succeeded
 	{
 		printf("Dynamic memory allocation failed\n"); //Output
 		return NULL;
 	}
 
-	tempForFrame = (frame_t*)malloc(sizeof(frame_t)); //Dynamic memory allocation
-	if (!tempForFrame) //Checking if the dynamic memory allocation succeeded
+	tempForitem = (item_t*)malloc(sizeof(item_t)); //Dynamic memory allocation
+	if (!tempForitem) //Checking if the dynamic memory allocation succeeded
 	{
 		printf("Dynamic memory allocation failed\n"); //Output
 		return NULL;
@@ -434,59 +434,59 @@ link_t* inputForLink(link_t* first)
 		return NULL;
 	}
 
-	printf("Please insert frame path: "); //Output
-	fgets(pathForFrame, MAX_PATH_SIZE, stdin); //Input
-	pathForFrame[strlen(pathForFrame) - ONE] = ZERO; //Remove '\n'
-	printf("Please insert frame duration(in miliseconds) :"); //Output
-	scanf("%d", &(tempForFrame->duration)); //Input
+	printf("Please insert item path: "); //Output
+	fgets(pathForitem, MAX_PATH_SIZE, stdin); //Input
+	pathForitem[strlen(pathForitem) - ONE] = ZERO; //Remove '\n'
+	printf("Please insert item duration(in miliseconds) :"); //Output
+	scanf("%d", &(tempForitem->duration)); //Input
 	getchar(); //Remove '\n'
-	printf("Please choose a name for that frame :"); //Output
-	fgets(nameForFrame, MAX_NAME_SIZE, stdin); //Input
-	nameForFrame[strlen(nameForFrame) - ONE] = ZERO; //Remove '\n'
-	while (checkOfName(first, nameForFrame)) //Function call
+	printf("Please choose a name for that item :"); //Output
+	fgets(nameForitem, MAX_NAME_SIZE, stdin); //Input
+	nameForitem[strlen(nameForitem) - ONE] = ZERO; //Remove '\n'
+	while (checkOfName(first, nameForitem)) //Function call
 	{
 		printf("That name already exists , please choose a different name!\n"); //Output
-		for (i = 0; i < strlen(nameForFrame); i++)
+		for (i = 0; i < strlen(nameForitem); i++)
 		{
-			nameForFrame[i] = 0; //Reset the string
+			nameForitem[i] = 0; //Reset the string
 		}
-		fgets(nameForFrame, MAX_NAME_SIZE, stdin); //Input
-		nameForFrame[strlen(nameForFrame) - ONE] = 0; //Remove '\n'
+		fgets(nameForitem, MAX_NAME_SIZE, stdin); //Input
+		nameForitem[strlen(nameForitem) - ONE] = 0; //Remove '\n'
 	}
 
-	tempForFrame->name = nameForFrame;
-	tempForFrame->path = pathForFrame;
-	tempForLink->frame = tempForFrame;
+	tempForitem->name = nameForitem;
+	tempForitem->path = pathForitem;
+	tempForLink->item = tempForitem;
 	tempForLink->next = NULL;
 	return tempForLink;
 }
 
 /*
 The purpose of the function is to check if the name that it gets exist in the linke list.
-The function gets pointer to the first organ, and the name of the organ that would be checked.
-The function returns 1 if the organ exists and 0 if it doesn't exists.
+The function gets pointer to the first item, and the name of the item that would be checked.
+The function returns 1 if the item exists and 0 if it doesn't exists.
 */
-int checkOfName(link_t* first, char nameForFrame[])
+int checkOfName(link_t* first, char nameForitem[])
 {
 	int ans = 0; //Setting variables
 	link_t* temp = first; //Setting variables
 
 	while (temp)
 	{
-		if (!strcmp(temp->frame->name, nameForFrame)) //Checking if this name already exist
+		if (!strcmp(temp->item->name, nameForitem)) //Checking if this name already exist
 		{
 			ans = 1; //This name already exist
 			break;
 		}
-		temp = temp->next; //Moving to the next organ
+		temp = temp->next; //Moving to the next item
 	}
 	return ans;
 }
 
 /*
-The purpose of the function is to delete an organ.
-The function gets pointer to the first organ, and the name of the organ that should be deleted,
-the function returns pointer to the first organ because the pointer to the first organ might be changed.
+The purpose of the function is to delete an item.
+The function gets pointer to the first item, and the name of the item that should be deleted,
+the function returns pointer to the first item because the pointer to the first item might be changed.
 */
 link_t* deleteSquad(link_t* curr, char name[])
 {
@@ -497,17 +497,17 @@ link_t* deleteSquad(link_t* curr, char name[])
 		return curr;
 	}
 	//if we found the name
-	if (strcmp(curr->frame->name, name) == 0)
+	if (strcmp(curr->item->name, name) == 0)
 	{
 		//if the node is last
 		if (!curr->next)
 		{
-			printf("The name has been found and the frame has been deleted.\n"); //Output
+			printf("The name has been found and the item has been deleted.\n"); //Output
 			free(priv);
 			return NULL;
 		}
-		curr = curr->next; //Moving to the next organ
-		printf("The name has been found and the frame has been deleted.\n"); //Output
+		curr = curr->next; //Moving to the next item
+		printf("The name has been found and the item has been deleted.\n"); //Output
 		free(priv);
 
 		return curr;
@@ -520,9 +520,9 @@ link_t* deleteSquad(link_t* curr, char name[])
 }
 
 /*
-The purpose of the function is to change position of an organ.
-The function gets pointer to the first organ, the name of the organ that should be changed and the position.
-The function returns pointer to the first organ because the pointer to the first organ might be changed.
+The purpose of the function is to change position of an item.
+The function gets pointer to the first item, the name of the item that should be changed and the position.
+The function returns pointer to the first item because the pointer to the first item might be changed.
 */
 link_t* changePosition(link_t* curr, char name[], int position)
 {
@@ -542,7 +542,7 @@ link_t* changePosition(link_t* curr, char name[], int position)
 	}
 	if (position <= 0 || position > length)
 	{
-		printf("The movie contains only %d frames!\n", length);
+		printf("The movie contains only %d items!\n", length);
 		return first;
 	}
 
@@ -550,11 +550,11 @@ link_t* changePosition(link_t* curr, char name[], int position)
 	//The nodes after this node aren't changing in order.
 	while (curr->next)
 	{
-		if (curr == first && strcmp(curr->frame->name, name) == 0)
+		if (curr == first && strcmp(curr->item->name, name) == 0)
 		{
 			break;
 		}
-		if (strcmp(curr->next->frame->name, name) == 0)
+		if (strcmp(curr->next->item->name, name) == 0)
 		{
 			node = curr->next;
 			beforeNode = curr;
@@ -598,83 +598,83 @@ link_t* changePosition(link_t* curr, char name[], int position)
 
 /*
 The purpose of the function is to change a specific duration in the linked list.
-The function gets pointer to the first organ of the list, and returns nothing.
+The function gets pointer to the first item of the list, and returns nothing.
 */
-void changeFrameDuration(link_t* link)
+void changeitemDuration(link_t* link)
 {
 	char name[MAX_NAME_SIZE] = { 0 }; //Setting variables
 	int newDuration = 0; //Setting variables
 	int isName = 0; //Setting variables
 
-	printf("Write the name of the frame which you want to change the duration in: "); //Output
+	printf("Write the name of the item which you want to change the duration in: "); //Output
 	fgets(name, MAX_NAME_SIZE, stdin); //Input
 	name[strlen(name) - ONE] = ZERO; //Remove '\n'
 
-	while (link) //while the current organ isn't NULL.
+	while (link) //while the current item isn't NULL.
 	{
-		if (!strcmp(link->frame->name, name)) //checking if it is the right frame
+		if (!strcmp(link->item->name, name)) //checking if it is the right item
 		{
 			printf("Write the new duration: "); //Output
 			scanf("%d", &newDuration); //Input
 
-			link->frame->duration = newDuration;
+			link->item->duration = newDuration;
 
-			isName = 1; //The frame was found
+			isName = 1; //The item was found
 		}
 		link = link->next;
 	}
 
-	if (!isName) //Checking if the frame was found
+	if (!isName) //Checking if the item was found
 	{
-		printf("The frame does not exist.\n"); //Output
+		printf("The item does not exist.\n"); //Output
 	}
 
 }
 
 /*
 The purpose of the function is to change all the durations in the linked list.
-The function gets pointer to the first organ of the list, and returns nothing.
+The function gets pointer to the first item of the list, and returns nothing.
 */
 void changeAllTheDurations(link_t* first)
 {
-	int durationForFrame = 0; //Setting variables
+	int durationForitem = 0; //Setting variables
 	link_t* temp = first; //Setting variables
 
-	printf("Please insert frame duration(in miliseconds) :"); //Output
-	scanf("%d", &durationForFrame); //Input
+	printf("Please insert item duration(in miliseconds) :"); //Output
+	scanf("%d", &durationForitem); //Input
 
-	while (temp) //while the current organ isn't NULL.
+	while (temp) //while the current item isn't NULL.
 	{
-		temp->frame->duration = durationForFrame; //Changing the duration
-		temp = temp->next; //Moving to the next organ
+		temp->item->duration = durationForitem; //Changing the duration
+		temp = temp->next; //Moving to the next item
 	}
 }
 
 /*
 The purpose of the function is to print the linked list.
-The function gets pointer to the first organ of the list, and returns nothing.
+The function gets pointer to the first item of the list, and returns nothing.
 */
-void printFrames(link_t* link)
+void printitems(link_t* link)
 {
 	printf("\tName\t\tDuration\tPath\n"); //Output
-	while (link) //while the current organ isn't NULL.
+	while (link) //while the current item isn't NULL.
 	{
-		printf("\t%s\t\t%d ms\t\t%s\n", link->frame->name, link->frame->duration, link->frame->path); //Output
+		printf("\t%s\t\t%d ms\t\t%s\n", link->item->name, link->item->duration, link->item->path); //Output
 		link = link->next;
 	}
 }
 
 /*
 The purpose of the function is to free the linked list.
-The function gets pointer to the first organ of the list, and returns nothing.
+The function gets pointer to the first item of the list, and returns nothing.
 */
 void freeFun(link_t* first)
 {
 	link_t* temp = first; //Setting variables
 
-	while (first) //while the current organ isn't NULL.
+	while (first) //while the current item isn't NULL.
 	{
-		free(first->frame);
+		free(first->item);
 		temp = first->next;
 		free(first);
 		first = temp;
@@ -683,8 +683,8 @@ void freeFun(link_t* first)
 
 /*
 play the movie!!
-input: a linked list of frames to display
-display the images each for the duration of the frame one by one and close the window.
+input: a linked list of items to display
+display the images each for the duration of the item one by one and close the window.
 */
 void play(link_t *list)
 {
@@ -694,7 +694,7 @@ void play(link_t *list)
 
 	while (list != 0)
 	{
-		image = cvLoadImage(list->frame->path, 1);
+		image = cvLoadImage(list->item->path, 1);
 		if (!image)//The image is empty.
 		{
 			printf("could not open or find image number %d\n", counter);
@@ -703,7 +703,7 @@ void play(link_t *list)
 		else
 		{
 			cvShowImage("Display window", image);//display the image
-			cvWaitKey(list->frame->duration);//wait
+			cvWaitKey(list->item->duration);//wait
 			list = list->next;
 			cvReleaseImage(&image);
 		}
@@ -716,7 +716,7 @@ void play(link_t *list)
 /*
 The purpose of the function is to save a video.
 The function receives the name of the video from the user and check if this name already exists.
-The function gets pointer to the first organ of the list and returns 0 if everything worked fine, and 1 if there was a problem.
+The function gets pointer to the first item of the list and returns 0 if everything worked fine, and 1 if there was a problem.
 */
 int saveFun(link_t* first)
 {
@@ -788,13 +788,13 @@ int saveFun(link_t* first)
 		return 1;
 	}
 
-	while (curr) //while the current organ isn't NULL.
+	while (curr) //while the current item isn't NULL.
 	{
-		fprintf(savedFile, "%s\n", curr->frame->name); //Writing in to the file
+		fprintf(savedFile, "%s\n", curr->item->name); //Writing in to the file
 		
-		fprintf(savedFile, "%d\n", curr->frame->duration); //Writing in to the file
+		fprintf(savedFile, "%d\n", curr->item->duration); //Writing in to the file
 		
-		fprintf(savedFile, "%s\n", curr->frame->path); //Writing in to the file
+		fprintf(savedFile, "%s\n", curr->item->path); //Writing in to the file
 		
 		curr = curr->next; //moving to the next element
 	}
@@ -815,7 +815,7 @@ int saveFun(link_t* first)
 /*
 The purpose of the function is to open a saved video.
 The function receives the name of the video from the user and transmits it to a linked list.
-The function gets nothing and returns pointer to the first organ of the list.
+The function gets nothing and returns pointer to the first item of the list.
 */
 link_t* OpenSavedMovie(void)
 {
@@ -830,9 +830,9 @@ link_t* OpenSavedMovie(void)
 	link_t* tempForLink = NULL; //Setting variables
 	link_t* curr = NULL; //Setting variables
 	link_t* first = NULL; //Setting variables
-	frame_t* tempForFrame = NULL; //Setting variables
-	char* nameForFrame = NULL; //Setting variables
-	char* pathForFrame = NULL; //Setting variables
+	item_t* tempForitem = NULL; //Setting variables
+	char* nameForitem = NULL; //Setting variables
+	char* pathForitem = NULL; //Setting variables
 	char letter = 0; //Setting variables
 
 	do
@@ -885,25 +885,25 @@ link_t* OpenSavedMovie(void)
 	}
 
 	flag = 0; //Reset the flag for a new use.
-	//The new use of the flag is if the file has reached the end(There aren't more frames).
+	//The new use of the flag is if the file has reached the end(There aren't more items).
 	while (!flag) //Checking if the file has reached the end.
 	{
-		nameForFrame = (char*)calloc(MAX_NAME_SIZE, sizeof(char)); //Dynamic memory allocation
-		if (!nameForFrame) //Checking if the dynamic memory allocation succeeded
+		nameForitem = (char*)calloc(MAX_NAME_SIZE, sizeof(char)); //Dynamic memory allocation
+		if (!nameForitem) //Checking if the dynamic memory allocation succeeded
 		{
 			printf("Dynamic memory allocation failed\n"); //Output
 			return NULL;
 		}
 
-		pathForFrame = (char*)calloc(MAX_PATH_SIZE, sizeof(char)); //Dynamic memory allocation
-		if (!pathForFrame) //Checking if the dynamic memory allocation succeeded
+		pathForitem = (char*)calloc(MAX_PATH_SIZE, sizeof(char)); //Dynamic memory allocation
+		if (!pathForitem) //Checking if the dynamic memory allocation succeeded
 		{
 			printf("Dynamic memory allocation failed\n"); //Output
 			return NULL;
 		}
 
-		tempForFrame = (frame_t*)malloc(sizeof(frame_t)); //Dynamic memory allocation
-		if (!tempForFrame) //Checking if the dynamic memory allocation succeeded
+		tempForitem = (item_t*)malloc(sizeof(item_t)); //Dynamic memory allocation
+		if (!tempForitem) //Checking if the dynamic memory allocation succeeded
 		{
 			printf("Dynamic memory allocation failed\n"); //Output
 			return NULL;
@@ -915,9 +915,9 @@ link_t* OpenSavedMovie(void)
 			return NULL;
 		}
 
-		tempForFrame->name = nameForFrame;
-		tempForFrame->path = pathForFrame;
-		tempForLink->frame = tempForFrame;
+		tempForitem->name = nameForitem;
+		tempForitem->path = pathForitem;
+		tempForLink->item = tempForitem;
 		tempForLink->next = NULL;
 		if (flagFirstTime)
 		{
@@ -927,11 +927,11 @@ link_t* OpenSavedMovie(void)
 		letter = (char)fgetc(savedFile); //reading from the file.
 		while (letter != '\n'  && letter != EOF) //While it isn't the end of the line and it isn't the end of the file
 		{
-			tempForLink->frame->name[place] = letter;
+			tempForLink->item->name[place] = letter;
 			place++;
 			letter = fgetc(savedFile); //reading from the file.
 		}
-		if (!strcmp(tempForLink->frame->name, "end_of_list-Video_editing_program")) //Checking if it is the end of the file.
+		if (!strcmp(tempForLink->item->name, "end_of_list-Video_editing_program")) //Checking if it is the end of the file.
 		{
 			flag = 1; //It is the end of the file
 		}
@@ -942,10 +942,10 @@ link_t* OpenSavedMovie(void)
 				first = tempForLink;
 				letter = fgetc(savedFile); //reading from the file.
 				place = 0; //Reset the place.
-				tempForLink->frame->duration = 0;
+				tempForLink->item->duration = 0;
 				while (letter != '\n'  && letter != EOF) //While it isn't the end of the line and it isn't the end of the file
 				{
-					tempForLink->frame->duration = tempForLink->frame->duration * 10 + (letter - '0'); //Reading a letter from the file and adding it to the duration
+					tempForLink->item->duration = tempForLink->item->duration * 10 + (letter - '0'); //Reading a letter from the file and adding it to the duration
 					place++;
 					letter = fgetc(savedFile); //reading from the file.
 				}
@@ -953,7 +953,7 @@ link_t* OpenSavedMovie(void)
 				place = 0; //Reset the place.
 				while (letter != '\n'  && letter != EOF) //While it isn't the end of the line and it isn't the end of the file
 				{
-					tempForLink->frame->path[place] = letter;
+					tempForLink->item->path[place] = letter;
 					place++;
 					letter = (char)fgetc(savedFile); //reading from the file.
 				}
@@ -963,10 +963,10 @@ link_t* OpenSavedMovie(void)
 			{
 				letter = (char)fgetc(savedFile); //reading from the file.
 				place = 0; //Reset the place.
-				tempForLink->frame->duration = 0;
+				tempForLink->item->duration = 0;
 				while (letter != '\n'  && letter != EOF) //While it isn't the end of the line and it isn't the end of the file
 				{
-					tempForLink->frame->duration = tempForLink->frame->duration * 10 + (letter - '0');
+					tempForLink->item->duration = tempForLink->item->duration * 10 + (letter - '0');
 					place++;
 					letter = (char)fgetc(savedFile); //reading from the file.
 				}
@@ -974,7 +974,7 @@ link_t* OpenSavedMovie(void)
 				place = 0;
 				while (letter != '\n'  && letter != EOF) //While it isn't the end of the line and it isn't the end of the file
 				{
-					tempForLink->frame->path[place] = letter;
+					tempForLink->item->path[place] = letter;
 					place++;
 					letter = (char)fgetc(savedFile); //reading from the file.
 				}
@@ -987,25 +987,25 @@ link_t* OpenSavedMovie(void)
 }
 
 /*
-The purpose of the function is to add an organ to the end.
-The function gets pointer to the first organ, and the new organ and returns pointer to the first organ, 
-because if the first organ that it gets is NULL, the pointer to the first organ would be changed.
+The purpose of the function is to add an item to the end.
+The function gets pointer to the first item, and the new item and returns pointer to the first item, 
+because if the first item that it gets is NULL, the pointer to the first item would be changed.
 */
-link_t* addToEnd(link_t* first, link_t* lastOrgan)
+link_t* addToEnd(link_t* first, link_t* lastitem)
 {
-	if (!first) //Checking if the first organ is NULL.
+	if (!first) //Checking if the first item is NULL.
 	{
-		first = lastOrgan;
+		first = lastitem;
 	}
 	else
 	{
-		if (first->next) //Checking if the next organ is NULL.
+		if (first->next) //Checking if the next item is NULL.
 		{
-			addToEnd(first->next, lastOrgan);
+			addToEnd(first->next, lastitem);
 		}
 		else
 		{
-			first->next = lastOrgan;
+			first->next = lastitem;
 		}
 	}
 	return first;
@@ -1058,11 +1058,11 @@ int showAllTheSavedMovies(void)
 	char strFilePath[] = "savedVideos\\*.*"; //Setting variables
 	char nameAndPath[MAX_NAME_SIZE] = { 0 }; //Setting variables
 	link_t* tempForLink = NULL; //Setting variables
-	frame_t* tempForFrame = NULL; //Setting variables
+	item_t* tempForitem = NULL; //Setting variables
 	link_t* first = NULL; //Setting variables
 	int flag = 0, place = 0, flagFirstTime = 0; //Setting variables
-	char* nameForFrame = NULL; //Setting variables
-	char* pathForFrame = NULL; //Setting variables
+	char* nameForitem = NULL; //Setting variables
+	char* pathForitem = NULL; //Setting variables
 	char letter = 0; //Setting variables
 	FILE* savedFile = NULL; //Setting variables
 
@@ -1082,25 +1082,25 @@ int showAllTheSavedMovies(void)
 				}
 
 				flag = 0;//Reset the flag for a new use.
-				//The new use of the flag is if the file has reached the end(There aren't more frames).
+				//The new use of the flag is if the file has reached the end(There aren't more items).
 				while (!flag) //Checking if the file has reached the end.
 				{
-					nameForFrame = (char*)calloc(MAX_NAME_SIZE, sizeof(char)); //Dynamic memory allocation
-					if (!nameForFrame) //Checking if the dynamic memory allocation succeeded
+					nameForitem = (char*)calloc(MAX_NAME_SIZE, sizeof(char)); //Dynamic memory allocation
+					if (!nameForitem) //Checking if the dynamic memory allocation succeeded
 					{
 						printf("Dynamic memory allocation failed\n"); //Output
 						return 1;
 					}
 
-					pathForFrame = (char*)calloc(MAX_PATH_SIZE, sizeof(char)); //Dynamic memory allocation
-					if (!pathForFrame) //Checking if the dynamic memory allocation succeeded
+					pathForitem = (char*)calloc(MAX_PATH_SIZE, sizeof(char)); //Dynamic memory allocation
+					if (!pathForitem) //Checking if the dynamic memory allocation succeeded
 					{
 						printf("Dynamic memory allocation failed\n"); //Output
 						return 1;
 					}
 
-					tempForFrame = (frame_t*)malloc(sizeof(frame_t)); //Dynamic memory allocation
-					if (!tempForFrame) //Checking if the dynamic memory allocation succeeded
+					tempForitem = (item_t*)malloc(sizeof(item_t)); //Dynamic memory allocation
+					if (!tempForitem) //Checking if the dynamic memory allocation succeeded
 					{
 						printf("Dynamic memory allocation failed\n"); //Output
 						return 1;
@@ -1112,9 +1112,9 @@ int showAllTheSavedMovies(void)
 						return 1;
 					}
 
-					tempForFrame->name = nameForFrame;
-					tempForFrame->path = pathForFrame;
-					tempForLink->frame = tempForFrame;
+					tempForitem->name = nameForitem;
+					tempForitem->path = pathForitem;
+					tempForLink->item = tempForitem;
 					tempForLink->next = NULL;
 					if (flagFirstTime)
 					{
@@ -1124,12 +1124,12 @@ int showAllTheSavedMovies(void)
 					letter = fgetc(savedFile); //reading from the file.
 					while (letter != '\n'  && letter != EOF) //While it isn't the end of the line and it isn't the end of the file
 					{
-						tempForLink->frame->name[place] = letter;
+						tempForLink->item->name[place] = letter;
 						place++;
 						letter = fgetc(savedFile); //reading from the file.
 					}
 
-					if (!strcmp(tempForLink->frame->name, "end_of_list-Video_editing_program")) //Checking if it is the end of the file.
+					if (!strcmp(tempForLink->item->name, "end_of_list-Video_editing_program")) //Checking if it is the end of the file.
 					{
 						flag = 1; //It is the end of the file
 					}
@@ -1137,10 +1137,10 @@ int showAllTheSavedMovies(void)
 					{
 						letter = fgetc(savedFile); //reading from the file.
 						place = 0; //Reset the place
-						tempForLink->frame->duration = 0; //Reset the duration
+						tempForLink->item->duration = 0; //Reset the duration
 						while (letter != '\n'  && letter != EOF) //While it isn't the end of the line and it isn't the end of the file
 						{
-							tempForLink->frame->duration = tempForLink->frame->duration * 10 + (letter - '0'); //Reading a letter from the file and adding it to the duration
+							tempForLink->item->duration = tempForLink->item->duration * 10 + (letter - '0'); //Reading a letter from the file and adding it to the duration
 							place++;
 							letter = fgetc(savedFile); //reading from the file.
 						}
@@ -1148,7 +1148,7 @@ int showAllTheSavedMovies(void)
 						place = 0; //Reset the place
 						while (letter != '\n'  && letter != EOF) //While it isn't the end of the line and it isn't the end of the file
 						{
-							tempForLink->frame->path[place] = letter;
+							tempForLink->item->path[place] = letter;
 							place++;
 							letter = fgetc(savedFile); //reading from the file.
 						}
@@ -1158,7 +1158,7 @@ int showAllTheSavedMovies(void)
 				play(first); //Function call
 				Sleep(200); //To separate between the videos
 				freeFun(first); //Function call
-				first = NULL; //Reset the pointer to the first organ
+				first = NULL; //Reset the pointer to the first item
 				fclose(savedFile);
 			}
 		} while (FindNextFile(myFolder, &dataInFile)); //Moving to the next file
